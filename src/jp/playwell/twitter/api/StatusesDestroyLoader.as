@@ -9,17 +9,16 @@
 package jp.playwell.twitter.api
 {
 	import flash.events.Event;
-	import flash.events.ProgressEvent;
 	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
+	import jp.playwell.twitter.data.Account;
 	import jp.playwell.twitter.data.Tweet;
 	import jp.playwell.twitter.utils.TweetUtil;
-	[Event(name="progress", type="flash.events.ProgressEvent")]
 	/**
 	 *
 	 * @author nariyu
-	 * @see https://dev.twitter.com/docs/api/1/get/statuses/show/%3Aid
+	 * @see https://dev.twitter.com/docs/api/1/post/statuses/destroy/%3Aid
 	 */
-	public class StatusesShowLoader extends TwitterLoaderBase
+	public class StatusesDestroyLoader extends TwitterLoaderBase
 	{
 
 
@@ -36,13 +35,15 @@ package jp.playwell.twitter.api
 		 * @param account
 		 * @param tweetId
 		 */
-		public function StatusesShowLoader(tweetId:String)
+		public function StatusesDestroyLoader(account:Account, tweetId:String)
 		{
+			super(account);
 
-			super();
+			url = "statuses/destroy/" + tweetId;
 
-			url = "statuses/show/" + tweetId;
+			this.tweetId = tweetId;
 
+			vars.include_entities = "true";
 		}
 
 
@@ -60,6 +61,12 @@ package jp.playwell.twitter.api
 		 */
 		public var tweet:Tweet;
 
+		/**
+		 *
+		 * @default
+		 */
+		public var tweetId:String;
+
 
 		//----------------------------------------------------------
 		//
@@ -69,18 +76,9 @@ package jp.playwell.twitter.api
 		//
 		//----------------------------------------------------------
 
-		/**
-		 *
-		 * @param event
-		 */
 		override protected function completeHandler(event:Event):void
 		{
-
-			super.completeHandler(event);
-
 			tweet = TweetUtil.parseTweet(data);
-			//trace(tweet.text);
-
 		}
 	}
 }

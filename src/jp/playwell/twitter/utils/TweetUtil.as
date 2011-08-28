@@ -88,6 +88,18 @@ package jp.playwell.twitter.utils
 
 			var convertItems:Array = [];
 			var i:int;
+			
+			if (entities.hasOwnProperty("media"))
+			{
+				var media:Array = entities.media || [];
+				
+				for (i = 0; i < media.length; i++)
+				{
+					var med:Object = media[i];
+					convertItems.push([med.indices[0], med.indices[1], med.url,
+						"http://" + med.display_url]);
+				}
+			}
 
 			if (entities.hasOwnProperty("urls"))
 			{

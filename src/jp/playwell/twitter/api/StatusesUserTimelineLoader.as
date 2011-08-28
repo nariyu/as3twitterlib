@@ -8,18 +8,13 @@
 
 package jp.playwell.twitter.api
 {
-	import flash.events.Event;
-	import flash.events.ProgressEvent;
-	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
-	import jp.playwell.twitter.data.Tweet;
-	import jp.playwell.twitter.utils.TweetUtil;
-	[Event(name="progress", type="flash.events.ProgressEvent")]
+	import jp.playwell.twitter.data.Account;
 	/**
 	 *
 	 * @author nariyu
-	 * @see https://dev.twitter.com/docs/api/1/get/statuses/show/%3Aid
+	 * @see https://dev.twitter.com/docs/api/1/get/statuses/user_timeline
 	 */
-	public class StatusesShowLoader extends TwitterLoaderBase
+	public class StatusesUserTimeline extends StatusesHomeTimeline
 	{
 
 
@@ -34,15 +29,12 @@ package jp.playwell.twitter.api
 		/**
 		 *
 		 * @param account
-		 * @param tweetId
 		 */
-		public function StatusesShowLoader(tweetId:String)
+		public function StatusesUserTimeline(account:Account)
 		{
+			super(account);
 
-			super();
-
-			url = "statuses/show/" + tweetId;
-
+			url = "statuses/user_timeline";
 		}
 
 
@@ -58,7 +50,13 @@ package jp.playwell.twitter.api
 		 *
 		 * @default
 		 */
-		public var tweet:Tweet;
+		public var screenName:String;
+
+		/**
+		 *
+		 * @default
+		 */
+		public var userId:String;
 
 
 		//----------------------------------------------------------
@@ -69,18 +67,18 @@ package jp.playwell.twitter.api
 		//
 		//----------------------------------------------------------
 
-		/**
-		 *
-		 * @param event
-		 */
-		override protected function completeHandler(event:Event):void
+		override public function load():void
 		{
+			delete vars.screen_name;
+			delete vars.user_id;
 
-			super.completeHandler(event);
+			if (screenName)
+				vars.screen_name = screenName;
 
-			tweet = TweetUtil.parseTweet(data);
-			//trace(tweet.text);
+			if (userId)
+				vars.user_id = userId;
 
+			super.load();
 		}
 	}
 }

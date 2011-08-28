@@ -73,14 +73,16 @@ package jp.playwell.twitter.api.supportClasses
 		/**
 		 *
 		 */
-		public function TwitterLoaderBase()
+		public function TwitterLoaderBase(account:Account = null)
 		{
 
 			super();
 
 			baseURL = API_BASE_URL;
-
 			method = URLRequestMethod.GET;
+
+			this.account = account;
+
 			vars = new URLVariables;
 
 			consumer = new OAuthConsumer(TwitterAPIConfig.consumerKey,

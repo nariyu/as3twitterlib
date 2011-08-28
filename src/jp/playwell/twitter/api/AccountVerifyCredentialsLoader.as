@@ -35,10 +35,9 @@ package jp.playwell.twitter.api
 		public function AccountVerifyCredentialsLoader(account:Account)
 		{
 
-			super();
+			super(account);
+
 			url = "account/verify_credentials";
-			
-			this.account = account;
 
 		}
 
@@ -46,7 +45,7 @@ package jp.playwell.twitter.api
 		//----------------------------------------------------------
 		//
 		//
-		//   Event handlers 
+		//   Overriden methods 
 		//
 		//
 		//----------------------------------------------------------

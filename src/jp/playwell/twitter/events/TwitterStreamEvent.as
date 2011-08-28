@@ -68,12 +68,6 @@ package jp.playwell.twitter.events
 		 *
 		 * @default
 		 */
-		public var json:Object;
-
-		/**
-		 *
-		 * @default
-		 */
 		public var streamItem:StreamItem;
 
 

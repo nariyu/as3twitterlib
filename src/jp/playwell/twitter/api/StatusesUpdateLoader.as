@@ -36,11 +36,11 @@ package jp.playwell.twitter.api
 		public function StatusesUpdateLoader(account:Account, text:String)
 		{
 
-			super();
+			super(account);
+
 			url = "statuses/update";
 			method = URLRequestMethod.POST;
 
-			this.account = account;
 			this.text = text;
 
 		}
@@ -81,12 +81,12 @@ package jp.playwell.twitter.api
 		override public function load():void
 		{
 
+			delete vars.in_reply_to_status_id;
+
 			vars.status = text;
 
-			if (replyTo)
+			if (replyTo && replyTo.match(/^\d+$/))
 				vars.in_reply_to_status_id = replyTo;
-			else
-				delete vars.in_reply_to_status_id;
 
 			super.load();
 

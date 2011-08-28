@@ -38,11 +38,11 @@ package jp.playwell.twitter.api
 		public function AccountUpdateProfileImageLoader(account:Account = null,
 			imageBytes:ByteArray = null)
 		{
-			super();
+			super(account);
+			
 			url = "account/update_profile_image";
 			method = URLRequestMethod.POST;
 
-			this.account = account;
 			this.imageBytes = imageBytes;
 		}
 
