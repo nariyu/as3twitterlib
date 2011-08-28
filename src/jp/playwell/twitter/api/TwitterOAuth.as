@@ -125,11 +125,10 @@ package jp.playwell.twitter.api
 
 			// access_token を完了しました
 
-			var verifyLoader:AccountVerifyCredentialsLoader = new AccountVerifyCredentialsLoader;
+			var verifyLoader:AccountVerifyCredentialsLoader = new AccountVerifyCredentialsLoader(account);
 			verifyLoader.addEventListener(ErrorEvent.ERROR, loader_errorHandler);
 			verifyLoader.addEventListener(Event.COMPLETE,
 				verifyLoader_completeHandler);
-			verifyLoader.account = account;
 			verifyLoader.load();
 
 			var e:TwitterOAuthEvent = new TwitterOAuthEvent(TwitterOAuthEvent.ACCESS_TOKEN_RECEIVED);

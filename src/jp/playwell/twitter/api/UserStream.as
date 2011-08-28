@@ -8,12 +8,19 @@
 
 package jp.playwell.twitter.api
 {
+	import flash.debugger.enterDebugger;
+	import flash.utils.escapeMultiByte;
+	
 	import jp.playwell.twitter.api.supportClasses.TwitterStreamBase;
+	
 	import org.iotashan.oauth.OAuthConsumer;
 	import org.iotashan.oauth.OAuthToken;
+	import org.iotashan.utils.URLEncoding;
+
 	/**
 	 *
 	 * @author nariyu
+	 * @see https://dev.twitter.com/docs/streaming-api/user-streams
 	 */
 	public class UserStream extends TwitterStreamBase
 	{
@@ -51,6 +58,8 @@ package jp.playwell.twitter.api
 		{
 
 			super();
+			
+			//vars.replies = "all";
 
 		}
 

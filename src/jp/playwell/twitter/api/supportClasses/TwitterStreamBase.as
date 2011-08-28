@@ -101,6 +101,12 @@ package jp.playwell.twitter.api.supportClasses
 		 *
 		 * @default
 		 */
+		private var buffer:String = "";
+
+		/**
+		 *
+		 * @default
+		 */
 		private var consumer:OAuthConsumer;
 
 		/**
@@ -108,12 +114,6 @@ package jp.playwell.twitter.api.supportClasses
 		 * @default
 		 */
 		private var stream:URLStream;
-
-		/**
-		 *
-		 * @default
-		 */
-		private var textPart:String;
 
 
 		//----------------------------------------------------------
@@ -171,6 +171,7 @@ package jp.playwell.twitter.api.supportClasses
 		protected function stream_openHandler(event:Event):void
 		{
 
+			buffer = "";
 			dispatchEvent(event.clone());
 
 		}
@@ -182,12 +183,18 @@ package jp.playwell.twitter.api.supportClasses
 		protected function stream_progressHandler(event:ProgressEvent):void
 		{
 
-			// ストリームを受け取った
 			dispatchEvent(event.clone());
 
-			var text:String = stream.readUTFBytes(stream.bytesAvailable);
-			parseText(text);
+			buffer += stream.readUTFBytes(stream.bytesAvailable);
 
+			var delimiter:String = "\r\n";
+			var index:int;
+
+			while ((index = buffer.indexOf(delimiter)) >= 0)
+			{
+				parseJSON(buffer.substr(0, index));
+				buffer = buffer.substr(index + delimiter.length);
+			}
 		}
 
 
@@ -244,12 +251,22 @@ package jp.playwell.twitter.api.supportClasses
 			var token:OAuthToken = new OAuthToken(account.oauthKey,
 				account.oauthSecret);
 
+			var varsString:String = vars.toString();
+			var authVars:URLVariables;
+
+			if (varsString.length > 0)
+				authVars = new URLVariables(varsString);
+			else
+				authVars = new URLVariables;
+			authVars.oauth_version = "1.0";
+
 			var oauthHeader:URLRequestHeader = (new OAuthRequest(OAuthRequest.HTTP_MEHTOD_GET,
-				url, {"oauth_version": "1.0"}, consumer, token)).buildRequest(new OAuthSignatureMethod_HMAC_SHA1(),
+				url, authVars, consumer, token)).buildRequest(new OAuthSignatureMethod_HMAC_SHA1(),
 				OAuthRequest.RESULT_TYPE_HEADER, regexpResult[1]) as URLRequestHeader;
 
 			var request:URLRequest = new URLRequest(url);
 			request.requestHeaders = [oauthHeader];
+			request.authenticate = false;
 			request.data = vars;
 
 			stream = new URLStream;
@@ -283,6 +300,9 @@ package jp.playwell.twitter.api.supportClasses
 		 */
 		protected function parseJSON(jsonString:String):void
 		{
+
+			if (jsonString == null || jsonString.length == 0)
+				return;
 
 			var event:TwitterStreamEvent;
 			var tweet:Tweet;
@@ -411,74 +431,6 @@ package jp.playwell.twitter.api.supportClasses
 				errorEvent.text = error.message;
 				dispatchEvent(errorEvent);
 				*/
-			}
-
-		}
-
-		/**
-		 * ストリームに流れてきた文字列を解析
-		 */
-		private function parseText(text:String):void
-		{
-
-			var result:Object;
-			var jsonString:String;
-
-			if (textPart != null)
-			{
-				if (text.match(/^[^\r\n]+$/))
-				{
-					textPart += text;
-					return;
-				}
-
-				result = text.match(/^(.+\})[\r\n]/);
-
-				if (result)
-				{
-					jsonString = textPart + result[1];
-					text = text.substr(String(result[0]).length);
-					parseJSON(jsonString);
-				}
-				textPart = null;
-			}
-
-
-			result = text.match(/\n(\{.+\})[\r\n$]/);
-
-			if (result)
-			{
-				jsonString = result[1];
-				textPart = null;
-				parseJSON(jsonString);
-				return;
-			}
-
-			result = text.match(/^(\{.+\})[\r\n$]/);
-
-			if (result)
-			{
-				jsonString = result[1];
-
-				textPart = null;
-				parseJSON(jsonString);
-				return;
-			}
-
-			result = text.match(/\n(\{.+)/);
-
-			if (result)
-			{
-				textPart = result[1];
-				return;
-			}
-
-			result = text.match(/^(\{.+)/);
-
-			if (result)
-			{
-				textPart = result[1];
-				return;
 			}
 
 		}

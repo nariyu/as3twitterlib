@@ -32,7 +32,7 @@ package jp.playwell.twitter.api.supportClasses
 
 	use namespace twitter_internal;
 	[Event(name="complete", type="flash.events.Event")]
-	[Event(name="error", type="fash.events.ErrorEvent")]
+	[Event(name="error", type="flash.events.ErrorEvent")]
 	/**
 	 *
 	 * @author nariyu

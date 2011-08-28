@@ -18,6 +18,7 @@ package jp.playwell.twitter.api
 	/**
 	 *
 	 * @author nariyu
+	 * @see https://dev.twitter.com/docs/api/1/get/statuses/show/%3Aid
 	 */
 	public class StatusesShowLoader extends TwitterLoaderBase
 	{
@@ -36,12 +37,11 @@ package jp.playwell.twitter.api
 		 * @param account
 		 * @param tweetId
 		 */
-		public function StatusesShowLoader(account:Account, tweetId:String)
+		public function StatusesShowLoader(tweetId:String)
 		{
 
 			super();
 			url = "statuses/show/" + tweetId;
-			this.account = account;
 
 		}
 
@@ -79,7 +79,7 @@ package jp.playwell.twitter.api
 			super.completeHandler(event);
 
 			tweet = TweetUtil.parseTweet(data);
-			trace(tweet.text);
+			//trace(tweet.text);
 
 		}
 	}

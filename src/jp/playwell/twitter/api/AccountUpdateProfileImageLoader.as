@@ -8,16 +8,17 @@
 
 package jp.playwell.twitter.api
 {
-	import flash.events.ErrorEvent;
+	import com.hurlant.util.Base64;
 	import flash.net.URLRequestMethod;
+	import flash.utils.ByteArray;
 	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
 	import jp.playwell.twitter.data.Account;
 	/**
 	 *
 	 * @author nariyu
-	 * @see https://dev.twitter.com/docs/api/1/post/statuses/update
+	 * @see https://dev.twitter.com/docs/api/1/post/account/update_profile_image
 	 */
-	public class StatusesUpdateLoader extends TwitterLoaderBase
+	public class AccountUpdateProfileImageLoader extends TwitterLoaderBase
 	{
 
 
@@ -32,17 +33,17 @@ package jp.playwell.twitter.api
 		/**
 		 *
 		 * @param account
+		 * @param imageBytes
 		 */
-		public function StatusesUpdateLoader(account:Account, text:String)
+		public function AccountUpdateProfileImageLoader(account:Account = null,
+			imageBytes:ByteArray = null)
 		{
-
 			super();
-			url = "statuses/update";
+			url = "account/update_profile_image";
 			method = URLRequestMethod.POST;
 
 			this.account = account;
-			this.text = text;
-
+			this.imageBytes = imageBytes;
 		}
 
 
@@ -58,13 +59,7 @@ package jp.playwell.twitter.api
 		 *
 		 * @default
 		 */
-		public var replyTo:String;
-
-		/**
-		 *
-		 * @default
-		 */
-		public var text:String;
+		public var imageBytes:ByteArray;
 
 
 		//----------------------------------------------------------
@@ -81,13 +76,7 @@ package jp.playwell.twitter.api
 		override public function load():void
 		{
 
-			vars.status = text;
-
-			if (replyTo)
-				vars.in_reply_to_status_id = replyTo;
-			else
-				delete vars.in_reply_to_status_id;
-
+			vars.image = Base64.encodeByteArray(imageBytes);
 			super.load();
 
 		}
