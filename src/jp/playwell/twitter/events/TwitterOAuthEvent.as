@@ -9,7 +9,9 @@
 package jp.playwell.twitter.events
 {
 	import flash.events.Event;
+	
 	import jp.playwell.twitter.data.Account;
+	
 	import org.iotashan.oauth.OAuthToken;
 	/**
 	 *
@@ -31,13 +33,7 @@ package jp.playwell.twitter.events
 		 *
 		 * @default
 		 */
-		public static const ACCESS_TOKEN_RECEIVED:String = "accessTokenReceived";
-
-		/**
-		 *
-		 * @default
-		 */
-		public static const RECEIVED_TOKEN:String = "receivedToken";
+		public static const TOKEN_RECEIVED:String = "tokenReceived";
 
 		/**
 		 *
@@ -88,6 +84,12 @@ package jp.playwell.twitter.events
 		 * @default
 		 */
 		public var authorizeURL:String;
+		
+		/**
+		 *
+		 * @default
+		 */
+		public var token:OAuthToken;
 
 
 		//----------------------------------------------------------

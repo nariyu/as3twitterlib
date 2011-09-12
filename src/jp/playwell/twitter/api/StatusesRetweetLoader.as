@@ -11,8 +11,8 @@ package jp.playwell.twitter.api
 	import flash.events.Event;
 	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
 	import jp.playwell.twitter.data.Account;
-	import jp.playwell.twitter.data.Tweet;
-	import jp.playwell.twitter.utils.TweetUtil;
+	import jp.playwell.twitter.data.Status;
+	import jp.playwell.twitter.utils.StatusUtil;
 	/**
 	 *
 	 * @author nariyu
@@ -35,13 +35,13 @@ package jp.playwell.twitter.api
 		 * @param account
 		 * @param tweetId
 		 */
-		public function StatusesRetweetLoader(account:Account, tweetId:String)
+		public function StatusesRetweetLoader(account:Account, statusId:String)
 		{
 			super(account);
 
-			url = "statuses/retweet/" + tweetId;
+			url = "statuses/retweet/" + statusId;
 
-			this.tweetId = tweetId;
+			this.statusId = statusId;
 
 			vars.include_entities = "true";
 		}
@@ -59,13 +59,13 @@ package jp.playwell.twitter.api
 		 *
 		 * @default
 		 */
-		public var tweet:Tweet;
+		public var status:Status;
 
 		/**
 		 *
 		 * @default
 		 */
-		public var tweetId:String;
+		public var statusId:String;
 
 
 		//----------------------------------------------------------
@@ -80,7 +80,7 @@ package jp.playwell.twitter.api
 		{
 			super.completeHandler(event);
 
-			tweet = TweetUtil.parseTweet(data);
+			status = StatusUtil.parseStatus(data);
 		}
 	}
 }

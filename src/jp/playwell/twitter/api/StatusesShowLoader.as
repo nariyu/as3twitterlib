@@ -11,8 +11,8 @@ package jp.playwell.twitter.api
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
-	import jp.playwell.twitter.data.Tweet;
-	import jp.playwell.twitter.utils.TweetUtil;
+	import jp.playwell.twitter.data.Status;
+	import jp.playwell.twitter.utils.StatusUtil;
 	[Event(name="progress", type="flash.events.ProgressEvent")]
 	/**
 	 *
@@ -36,12 +36,12 @@ package jp.playwell.twitter.api
 		 * @param account
 		 * @param tweetId
 		 */
-		public function StatusesShowLoader(tweetId:String)
+		public function StatusesShowLoader(statusId:String)
 		{
 
 			super();
 
-			url = "statuses/show/" + tweetId;
+			url = "statuses/show/" + statusId;
 
 		}
 
@@ -58,7 +58,7 @@ package jp.playwell.twitter.api
 		 *
 		 * @default
 		 */
-		public var tweet:Tweet;
+		public var status:Status;
 
 
 		//----------------------------------------------------------
@@ -78,8 +78,8 @@ package jp.playwell.twitter.api
 
 			super.completeHandler(event);
 
-			tweet = TweetUtil.parseTweet(data);
-			//trace(tweet.text);
+			status = StatusUtil.parseStatus(data);
+			//trace(status.text);
 
 		}
 	}

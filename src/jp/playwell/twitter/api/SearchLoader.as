@@ -9,6 +9,7 @@
 package jp.playwell.twitter.api
 {
 	import flash.events.Event;
+	
 	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
 	import jp.playwell.twitter.data.Account;
 	import jp.playwell.twitter.data.Status;
@@ -16,10 +17,20 @@ package jp.playwell.twitter.api
 	/**
 	 *
 	 * @author nariyu
-	 * @see https://dev.twitter.com/docs/api/1/get/statuses/home_timeline
 	 */
-	public class StatusesHomeTimelineLoader extends TwitterLoaderBase
+	public class SearchLoader extends TwitterLoaderBase
 	{
+
+
+		//----------------------------------------------------------
+		//
+		//
+		//   Static properties 
+		//
+		//
+		//----------------------------------------------------------
+
+		private static const API_BASE_URL:String = "https://search.twitter.com/";
 
 
 		//----------------------------------------------------------
@@ -33,14 +44,11 @@ package jp.playwell.twitter.api
 		/**
 		 *
 		 */
-		public function StatusesHomeTimelineLoader(account:Account)
+		public function SearchLoader()
 		{
-			super(account);
-
-			url = "statuses/home_timeline";
-			
-			vars.include_entities = "true";
-			vars.exclude_replies = "true";
+			super();
+			baseURL = API_BASE_URL;
+			url = "search";
 		}
 
 
@@ -52,30 +60,35 @@ package jp.playwell.twitter.api
 		//
 		//----------------------------------------------------------
 
+		[Bindable]
 		/**
 		 *
 		 * @default
 		 */
-		public var count:int = 200;
+		public var count:int = 100;
 
+		[Bindable]
 		/**
 		 *
 		 * @default
 		 */
-		public var excludeReplies:Boolean = false;
+		public var keyword:String;
 
+		[Bindable]
 		/**
 		 *
 		 * @default
 		 */
-		public var includeRetweet:Boolean = true;
+		public var lang:String = "all";
 
+		[Bindable]
 		/**
 		 *
 		 * @default
 		 */
 		public var maxStatusId:String;
 
+		[Bindable]
 		/**
 		 *
 		 * @default
@@ -95,12 +108,14 @@ package jp.playwell.twitter.api
 
 		override protected function completeHandler(event:Event):void
 		{
-			if (!(data is Array))
-				return;
-
 			_statuses = new Vector.<Status>;
-
-			var rawStatuses:Array = data as Array;
+			
+			var rawStatuses:Array = [];
+			if (data.hasOwnProperty("results"))
+			{
+				rawStatuses = data.results;
+			}
+			
 			var n:int = rawStatuses.length;
 			var status:Status;
 
@@ -120,17 +135,14 @@ package jp.playwell.twitter.api
 			delete vars.max_id;
 			delete vars.since_id;
 
-			vars.include_rts = includeRetweet ? "true" : "false";
-			vars.include_entities = "true";
-			vars.exclude_replies = excludeReplies ? "true" : "false";
-
 			if (maxStatusId && maxStatusId.match(/^\d+$/))
 				vars.max_id = maxStatusId;
 
 			if (sinceStatusId && sinceStatusId.match(/^\d+$/))
 				vars.sence_id = sinceStatusId;
 
-			vars.count = count;
+			vars.q = keyword;
+			vars.rpp = count;
 
 			super.load();
 		}

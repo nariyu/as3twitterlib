@@ -9,10 +9,11 @@
 package jp.playwell.twitter.api
 {
 	import flash.events.Event;
+	
 	import jp.playwell.twitter.api.supportClasses.TwitterLoaderBase;
 	import jp.playwell.twitter.data.Account;
-	import jp.playwell.twitter.data.Tweet;
-	import jp.playwell.twitter.utils.TweetUtil;
+	import jp.playwell.twitter.data.Status;
+	import jp.playwell.twitter.utils.StatusUtil;
 	/**
 	 *
 	 * @author nariyu
@@ -35,13 +36,13 @@ package jp.playwell.twitter.api
 		 * @param account
 		 * @param tweetId
 		 */
-		public function StatusesDestroyLoader(account:Account, tweetId:String)
+		public function StatusesDestroyLoader(account:Account, statusId:String)
 		{
 			super(account);
 
-			url = "statuses/destroy/" + tweetId;
+			url = "statuses/destroy/" + statusId;
 
-			this.tweetId = tweetId;
+			this.statusId = statusId;
 
 			vars.include_entities = "true";
 		}
@@ -59,13 +60,13 @@ package jp.playwell.twitter.api
 		 *
 		 * @default
 		 */
-		public var tweet:Tweet;
+		public var status:Status;
 
 		/**
 		 *
 		 * @default
 		 */
-		public var tweetId:String;
+		public var statusId:String;
 
 
 		//----------------------------------------------------------
@@ -78,7 +79,7 @@ package jp.playwell.twitter.api
 
 		override protected function completeHandler(event:Event):void
 		{
-			tweet = TweetUtil.parseTweet(data);
+			status = StatusUtil.parseStatus(data);
 		}
 	}
 }

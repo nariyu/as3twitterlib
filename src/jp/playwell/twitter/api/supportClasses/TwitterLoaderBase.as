@@ -117,24 +117,6 @@ package jp.playwell.twitter.api.supportClasses
 		 *
 		 * @default
 		 */
-		public var data:Object;
-
-		/**
-		 *
-		 * @default
-		 */
-		public var httpStatus:int;
-
-		/**
-		 *
-		 * @default
-		 */
-		public var loading:Boolean;
-
-		/**
-		 *
-		 * @default
-		 */
 		protected var loader:URLLoader;
 
 		/**
@@ -142,12 +124,6 @@ package jp.playwell.twitter.api.supportClasses
 		 * @default
 		 */
 		protected var method:String;
-
-		/**
-		 *
-		 * @default
-		 */
-		protected var rawData:String;
 
 		/**
 		 *
@@ -183,6 +159,81 @@ package jp.playwell.twitter.api.supportClasses
 		//----------------------------------------------------------
 		//
 		//
+		//   Setter / Getter 
+		//
+		//
+		//----------------------------------------------------------
+
+		/**
+		 *
+		 * @default
+		 */
+		private var _data:Object;
+
+		/**
+		 *
+		 * @return
+		 */
+		public function get data():Object
+		{
+			return _data;
+		}
+
+		/**
+		 *
+		 * @default
+		 */
+		private var _httpStatus:int = -1;
+
+		/**
+		 *
+		 * @return
+		 */
+		public function get httpStatus():int
+		{
+			return _httpStatus;
+		}
+
+		private var _loading:Boolean;
+
+		[Bindable]
+		/**
+		 *
+		 * @return
+		 */
+		public function get loading():Boolean
+		{
+			return _loading;
+		}
+
+		/**
+		 *
+		 * @param value
+		 */
+		public function set loading(value:Boolean):void
+		{
+
+		}
+
+		/**
+		 *
+		 * @default
+		 */
+		private var _rawData:String;
+
+		/**
+		 *
+		 * @return
+		 */
+		public function get rawData():String
+		{
+			return _rawData;
+		}
+
+
+		//----------------------------------------------------------
+		//
+		//
 		//   Event handlers 
 		//
 		//
@@ -211,11 +262,11 @@ package jp.playwell.twitter.api.supportClasses
 		protected function loader_completeHandler(event:Event):void
 		{
 
-			loading = false;
+			_loading = false;
 
 			clearEventListeners();
 
-			rawData = loader.data as String;
+			_rawData = loader.data as String;
 
 			if (!parseJSON(rawData))
 				return;
@@ -233,7 +284,7 @@ package jp.playwell.twitter.api.supportClasses
 		protected function loader_errorHandler(event:ErrorEvent):void
 		{
 
-			loading = false;
+			_loading = false;
 
 			clearEventListeners();
 
@@ -241,9 +292,9 @@ package jp.playwell.twitter.api.supportClasses
 
 			try
 			{
-				rawData = loader.data;
-				data = com.adobe.serialization.json.JSON.decode(loader.data);
-				text = data.error.toString();
+				_rawData = loader.data;
+				_data = com.adobe.serialization.json.JSON.decode(_rawData);
+				text = _data.error.toString();
 			}
 			catch (e:Error)
 			{
@@ -251,7 +302,7 @@ package jp.playwell.twitter.api.supportClasses
 
 			//logger.error(text);
 
-			switch (httpStatus)
+			switch (_httpStatus)
 			{
 				case 0:
 					text = "No network connect";
@@ -274,7 +325,8 @@ package jp.playwell.twitter.api.supportClasses
 					text = "Twitter is over capacity";
 					break;
 				default:
-					text = "Unknown error";
+					text = event.text;
+					//text = "Unknown error";
 					break;
 			}
 
@@ -289,44 +341,46 @@ package jp.playwell.twitter.api.supportClasses
 		 *
 		 * @param event
 		 */
-		protected function loader_httpResponceStatusHandler(event:HTTPStatusEvent):void
+		protected function loader_httpStatusHandler(event:HTTPStatusEvent):void
 		{
 
-			httpStatus = event.status;
+			_httpStatus = event.status;
 
-			var responceHeaders:Array = event.responseHeaders;
+		/*
+		var responceHeaders:Array = event.responseHeaders;
 
-			var headerName:String;
-			var hourlyLimit:Number;
-			var remainCount:Number;
-			var resetDate:Date;
+		var headerName:String;
+		var hourlyLimit:Number;
+		var remainCount:Number;
+		var resetDate:Date;
 
-			for each (var header:URLRequestHeader in responceHeaders)
+		for each (var header:URLRequestHeader in responceHeaders)
+		{
+			headerName = header.name.toLowerCase();
+
+			if (headerName == "x-ratelimit-limit")
 			{
-				headerName = header.name.toLowerCase();
-
-				if (headerName == "x-ratelimit-limit")
-				{
-					hourlyLimit = Number(header.value);
-				}
-				else if (headerName == "x-ratelimit-remaining")
-				{
-					remainCount = Number(header.value);
-				}
-				else if (headerName == "x-ratelimit-reset")
-				{
-					var d:Date = new Date();
-					d.setTime(Number(header.value) * 1000);
-					resetDate = d;
-				}
+				hourlyLimit = Number(header.value);
 			}
-
-			if (!isNaN(hourlyLimit) && !isNaN(remainCount) && resetDate)
+			else if (headerName == "x-ratelimit-remaining")
 			{
-				//account.hourlyLimit = hourlyLimit;
-				//account.remainCount = remainCount;
-				//account.resetDate = resetDate;
+				remainCount = Number(header.value);
 			}
+			else if (headerName == "x-ratelimit-reset")
+			{
+				var d:Date = new Date();
+				d.setTime(Number(header.value) * 1000);
+				resetDate = d;
+			}
+		}
+
+		if (!isNaN(hourlyLimit) && !isNaN(remainCount) && resetDate)
+		{
+			//account.hourlyLimit = hourlyLimit;
+			//account.remainCount = remainCount;
+			//account.resetDate = resetDate;
+		}
+		*/
 
 		}
 
@@ -362,7 +416,7 @@ package jp.playwell.twitter.api.supportClasses
 		{
 
 			clearEventListeners();
-			loading = false;
+			_loading = false;
 
 		}
 
@@ -372,14 +426,14 @@ package jp.playwell.twitter.api.supportClasses
 		public function load():void
 		{
 
-			rawData = "";
-			data = null;
+			_rawData = "";
+			_data = null;
 			interrupt();
 
 			var url:String = baseURL + this.url + ".json";
 
 			request = new URLRequest(url);
-			request.authenticate = false;
+			//request.authenticate = false;
 			request.method = method;
 			request.data = vars;
 
@@ -397,8 +451,8 @@ package jp.playwell.twitter.api.supportClasses
 			loader.addEventListener(IOErrorEvent.IO_ERROR, loader_errorHandler);
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,
 				loader_errorHandler);
-			loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS,
-				loader_httpResponceStatusHandler);
+			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS,
+				loader_httpStatusHandler);
 			loader.addEventListener(Event.COMPLETE, loader_completeHandler);
 			loader.load(request);
 
@@ -409,7 +463,7 @@ package jp.playwell.twitter.api.supportClasses
 				timer.start();
 			}
 
-			loading = true;
+			_loading = true;
 
 		}
 
@@ -435,14 +489,14 @@ package jp.playwell.twitter.api.supportClasses
 			try
 			{
 				str = str.replace(/\r\n/g, "\n");
-				data = com.adobe.serialization.json.JSON.decode(str);
+				_data = com.adobe.serialization.json.JSON.decode(str);
 
-				if (data.error)
+				if (_data.error)
 				{
-					//logger.error(data.error);
+					//logger.error(_data.error);
 
 					errorEvent = new ErrorEvent(ErrorEvent.ERROR);
-					errorEvent.text = data.error;
+					errorEvent.text = _data.error;
 					errorHandler(errorEvent);
 					dispatchEvent(errorEvent);
 					return false;
@@ -482,8 +536,8 @@ package jp.playwell.twitter.api.supportClasses
 					loader_errorHandler);
 				loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR,
 					loader_errorHandler);
-				loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS,
-					loader_httpResponceStatusHandler);
+				loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS,
+					loader_httpStatusHandler);
 				loader.removeEventListener(Event.COMPLETE,
 					loader_completeHandler);
 			}

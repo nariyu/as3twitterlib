@@ -9,6 +9,7 @@
 package jp.playwell.twitter.api.supportClasses
 {
 	import com.adobe.serialization.json.JSON;
+	
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -20,18 +21,20 @@ package jp.playwell.twitter.api.supportClasses
 	import flash.net.URLRequestHeader;
 	import flash.net.URLStream;
 	import flash.net.URLVariables;
+	
 	import jp.playwell.twitter.api.TwitterAPIConfig;
 	import jp.playwell.twitter.core.StreamItemType;
 	import jp.playwell.twitter.core.twitter_internal;
 	import jp.playwell.twitter.data.Account;
 	import jp.playwell.twitter.data.List;
+	import jp.playwell.twitter.data.Status;
 	import jp.playwell.twitter.data.StreamItem;
-	import jp.playwell.twitter.data.Tweet;
 	import jp.playwell.twitter.data.User;
 	import jp.playwell.twitter.events.TwitterStreamEvent;
 	import jp.playwell.twitter.utils.ListUtil;
-	import jp.playwell.twitter.utils.TweetUtil;
+	import jp.playwell.twitter.utils.StatusUtil;
 	import jp.playwell.twitter.utils.UserUtil;
+	
 	import org.iotashan.oauth.OAuthConsumer;
 	import org.iotashan.oauth.OAuthRequest;
 	import org.iotashan.oauth.OAuthSignatureMethod_HMAC_SHA1;
@@ -95,7 +98,7 @@ package jp.playwell.twitter.api.supportClasses
 		 *
 		 * @default
 		 */
-		public var vars:URLVariables;
+		protected var vars:URLVariables;
 
 		/**
 		 *
@@ -266,7 +269,7 @@ package jp.playwell.twitter.api.supportClasses
 
 			var request:URLRequest = new URLRequest(url);
 			request.requestHeaders = [oauthHeader];
-			request.authenticate = false;
+			//request.authenticate = false;
 			request.data = vars;
 
 			stream = new URLStream;
@@ -305,11 +308,11 @@ package jp.playwell.twitter.api.supportClasses
 				return;
 
 			var event:TwitterStreamEvent;
-			var tweet:Tweet;
+			var status:Status;
 			var user:User;
 			var sourceUser:User;
 			var targetUser:User;
-			var targetTweet:Tweet;
+			var targetStatus:Status;
 			var targetList:List;
 			var streamItem:StreamItem;
 
@@ -326,13 +329,13 @@ package jp.playwell.twitter.api.supportClasses
 					{
 						case "favorite":
 							sourceUser = UserUtil.parseUser(json.source);
-							targetTweet = TweetUtil.parseTweet(json.target_object);
+							targetStatus = StatusUtil.parseStatus(json.target_object);
 							event = new TwitterStreamEvent(TwitterStreamEvent.RECEIVE);
 							streamItem = new StreamItem(StreamItemType.FAVORITE);
 							break;
 						case "unfavorite":
 							sourceUser = UserUtil.parseUser(json.source);
-							targetTweet = TweetUtil.parseTweet(json.target_object);
+							targetStatus = StatusUtil.parseStatus(json.target_object);
 							event = new TwitterStreamEvent(TwitterStreamEvent.RECEIVE);
 							streamItem = new StreamItem(StreamItemType.UNFAVORITE);
 							break;
@@ -359,7 +362,7 @@ package jp.playwell.twitter.api.supportClasses
 						default:
 							//event = new TwitterStreamEvent(TwitterStreamEvent.UNKNOWN_EVENT);
 							//streamItem = new StreamItem(StreamItemType.UNKNOWN_EVENT);
-							trace(json.event + " " + jsonString);
+							//trace(json.event + " " + jsonString);
 							break;
 					}
 				}
@@ -369,18 +372,18 @@ package jp.playwell.twitter.api.supportClasses
 				{
 					var deletedId:String = json["delete"]["status"]["id_str"];
 
-					if (TweetUtil.storedTweets.hasOwnProperty(deletedId))
+					if (StatusUtil.storedStatuses.hasOwnProperty(deletedId))
 					{
-						targetTweet = TweetUtil.storedTweets[deletedId];
+						targetStatus = StatusUtil.storedStatuses[deletedId];
 					}
 					else
 					{
-						targetTweet = TweetUtil.parseTweet(json["delete"]["status"]);
+						targetStatus = StatusUtil.parseStatus(json["delete"]["status"]);
 					}
 
-					if (targetTweet)
+					if (targetStatus)
 					{
-						targetTweet.deleted = true;
+						targetStatus.deleted = true;
 					}
 
 					event = new TwitterStreamEvent(TwitterStreamEvent.RECEIVE);
@@ -393,9 +396,9 @@ package jp.playwell.twitter.api.supportClasses
 				{
 					if (json.user.hasOwnProperty("screen_name"))
 					{
-						tweet = TweetUtil.parseTweet(json);
+						status = StatusUtil.parseStatus(json);
 
-						if (!tweet)
+						if (!status)
 							return;
 
 						event = new TwitterStreamEvent(TwitterStreamEvent.RECEIVE);
@@ -417,9 +420,9 @@ package jp.playwell.twitter.api.supportClasses
 
 					streamItem.sourceUser = sourceUser;
 					streamItem.targetUser = targetUser;
-					streamItem.targetTweet = targetTweet;
+					streamItem.targetStatus = targetStatus;
 					streamItem.targetList = targetList;
-					streamItem.tweet = tweet;
+					streamItem.status = status;
 					streamItem.json = json;
 					dispatchEvent(event);
 				}

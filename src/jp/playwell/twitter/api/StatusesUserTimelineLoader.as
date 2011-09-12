@@ -14,7 +14,7 @@ package jp.playwell.twitter.api
 	 * @author nariyu
 	 * @see https://dev.twitter.com/docs/api/1/get/statuses/user_timeline
 	 */
-	public class StatusesUserTimeline extends StatusesHomeTimeline
+	public class StatusesUserTimelineLoader extends StatusesHomeTimelineLoader
 	{
 
 
@@ -30,7 +30,7 @@ package jp.playwell.twitter.api
 		 *
 		 * @param account
 		 */
-		public function StatusesUserTimeline(account:Account)
+		public function StatusesUserTimelineLoader(account:Account)
 		{
 			super(account);
 

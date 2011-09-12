@@ -41,10 +41,31 @@ package jp.playwell.twitter.data
 
 		[Bindable]
 		/**
+		 * 
+		 * @default
+		 */
+		public var isProtected:Boolean;
+		
+		[Bindable]
+		/**
 		 *
 		 * @default
 		 */
 		public var joinedDate:Date;
+		
+		[Bindable]
+		/**
+		 *
+		 * @default
+		 */
+		public var lang:String;
+		
+		[Bindable]
+		/**
+		 *
+		 * @default
+		 */
+		public var listedCount:int;
 
 		[Bindable]
 		/**
@@ -72,21 +93,21 @@ package jp.playwell.twitter.data
 		 *
 		 * @default
 		 */
-		public var numOfFollowers:int;
+		public var followersCount:int;
 
 		[Bindable]
 		/**
 		 *
 		 * @default
 		 */
-		public var numOfFollowing:int;
+		public var friendsCount:int;
 
 		[Bindable]
 		/**
 		 *
 		 * @default
 		 */
-		public var numOfTweets:int;
+		public var tweetsCount:int;
 
 		[Bindable]
 		/**

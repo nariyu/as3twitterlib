@@ -15,7 +15,7 @@ package jp.playwell.twitter.data
 	 *
 	 * @author nariyu
 	 */
-	public class Tweet extends CoreData
+	public class Status extends CoreData
 	{
 
 
@@ -59,7 +59,7 @@ package jp.playwell.twitter.data
 		 *
 		 * @default
 		 */
-		public var inReplyTo:Tweet;
+		public var inReplyTo:Status;
 
 		[Bindable]
 		/**
@@ -87,7 +87,7 @@ package jp.playwell.twitter.data
 		 *
 		 * @default
 		 */
-		public var retweetOf:Tweet;
+		public var retweetOf:Status;
 
 		[Bindable]
 		/**

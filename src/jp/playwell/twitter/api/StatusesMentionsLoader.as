@@ -14,7 +14,7 @@ package jp.playwell.twitter.api
 	 * @author nariyu
 	 * @see https://dev.twitter.com/docs/api/1/get/statuses/mentions
 	 */
-	public class StatusesMentionsLoader extends StatusesHomeTimeline
+	public class StatusesMentionsLoader extends StatusesHomeTimelineLoader
 	{
 
 

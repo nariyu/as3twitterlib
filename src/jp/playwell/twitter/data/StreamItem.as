@@ -76,7 +76,7 @@ package jp.playwell.twitter.data
 		 *
 		 * @default
 		 */
-		public var targetTweet:Tweet;
+		public var targetStatus:Status;
 
 		[Bindable]
 		/**
@@ -90,7 +90,7 @@ package jp.playwell.twitter.data
 		 *
 		 * @default
 		 */
-		public var tweet:Tweet;
+		public var status:Status;
 
 		/**
 		 *

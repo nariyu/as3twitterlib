@@ -12,7 +12,7 @@ package jp.playwell.twitter.utils
 	import flash.utils.Dictionary;
 	import jp.playwell.twitter.core.twitter_internal;
 	import jp.playwell.twitter.data.CoreData;
-	import jp.playwell.twitter.data.Tweet;
+	import jp.playwell.twitter.data.Status;
 	import jp.playwell.twitter.data.User;
 
 	use namespace twitter_internal;
@@ -20,7 +20,7 @@ package jp.playwell.twitter.utils
 	 *
 	 * @author nariyu
 	 */
-	public class TweetUtil
+	public class StatusUtil
 	{
 
 
@@ -36,7 +36,7 @@ package jp.playwell.twitter.utils
 		 *
 		 * @default
 		 */
-		twitter_internal static var storedTweets:Dictionary = new Dictionary;
+		twitter_internal static var storedStatuses:Dictionary = new Dictionary;
 
 
 		//----------------------------------------------------------
@@ -60,7 +60,7 @@ package jp.playwell.twitter.utils
 
 			if (convertHTML)
 			{
-				str = str.replace(/(^|\s|[\r\n]|[あ-んが-ぼぁ-ょゎっーア-ンガ-ボヴァ-ョヮッーｱ-ﾝｧ-ｮｯｰﾟﾞ･ａ-ｚＡ-Ｚ０-９亜-龠、。，．・：；？！゛゜´｀¨＾￣＿ヽヾゝゞ〃仝々〆〇ー―‐／＼〜～∥｜…‥‘’“”（）〔〕［］｛｝〈〉《》「」『』【】＋－±×÷＝≠＜＞≦≧∞∴♂♀°′″℃￥＄￠￡％＃＆＊＠§☆★○●◎◇◆□■△▲▽▼※〒→←↑↓〓∈∋⊆⊇⊂⊃∪∩∧∨￢⇒⇔∀∃∠⊥⌒∂∇≡≒≪≫√∽∝∵∫∬Å‰♯♭♪†‡¶◯ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψωАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя─│┌┐┘└├┬┤┴┼━┃┏┓┛┗┣┳┫┻╋┠┯┨┷┿┝┰┥┸╂①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗㌍㌦㌣㌫㍊㌻㎜㎝㎞㎎㎏㏄㎡㍻〝〟№㏍℡㊤㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼≒≡∫∮∑√⊥∠∟⊿∵∩∪\{\}\[\]\(\)\<\>\!\@\#\$\%\^\&\*\-\_\+\=\~\`\:\;\'\"\,\.\/])(https?:\/\/[-_.a-zA-Z0-9;\/?:@&=+$,!~*\(\)%#]+|[#＃][-_a-zA-Z0-9_.あ-んが-ぼぁ-ょゎっーア-ンガ-ボヴァ-ョヮッーｱ-ﾝｧ-ｮｯｰﾟﾞ･ａ-ｚＡ-Ｚ０-９亜-龠ヶヵ々]+|#[-_a-zA-Z0-9_.]+|[-a-zA-Z0-9+_.]*[-a-zA-Z0-9+_]@[-a-zA-Z0-9.]+|@[a-zA-Z0-9_]+)/g,
+				str = str.replace(/(^|\s|[\r\n]|[あ-んが-ぼぁ-ょゎっーア-ンガ-ボヴァ-ョヮッーｱ-ﾝｧ-ｮｯｰﾟﾞ･ａ-ｚＡ-Ｚ０-９亜-龠、。，．・：；？！゛゜´｀¨＾￣＿ヽヾゝゞ〃仝々〆〇ー―‐／＼〜～∥｜…‥‘’“”（）〔〕［］｛｝〈〉《》「」『』【】＋－±×÷＝≠＜＞≦≧∞∴♂♀°′″℃￥＄￠￡％＃＆＊＠§☆★○●◎◇◆□■△▲▽▼※〒→←↑↓〓∈∋⊆⊇⊂⊃∪∩∧∨￢⇒⇔∀∃∠⊥⌒∂∇≡≒≪≫√∽∝∵∫∬Å‰♯♭♪†‡¶◯ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψωАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя─│┌┐┘└├┬┤┴┼━┃┏┓┛┗┣┳┫┻╋┠┯┨┷┿┝┰┥┸╂①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗㌍㌦㌣㌫㍊㌻㎜㎝㎞㎎㎏㏄㎡㍻〝〟№㏍℡㊤㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼≒≡∫∮∑√⊥∠∟⊿∵∩∪\{\}\[\]\(\)\<\>\!\@\#\$\%\^\&\*\-\_\+\=\~\`\:\;\'\"\,\.\/])(https?:\/\/[-_.a-zA-Z0-9;\/?:@&=+$,!~*\(\)%#]+|[#＃][-_a-zA-Z0-9_.あ-んが-ぼぁ-ょゎっーア-ンガ-ボヴァ-ョヮッーｱ-ﾝｧ-ｮｯｰﾟﾞ･ａ-ｚＡ-Ｚ０-９亜-龠ヶヵ々]+|[-a-zA-Z0-9+_.]*[-a-zA-Z0-9+_]@[-a-zA-Z0-9.]+|@[a-zA-Z0-9_]+)/g,
 					"$1<a href='event:$2' target='_blank'>" + (linkColor ? "<font color='#003399'>" : "<u>") + "$2" + (linkColor ? "</font>" : "</u>") + "</a>");
 				str = str.replace(/\r\n|[\r\n]/g, "<br>");
 			}
@@ -77,22 +77,22 @@ package jp.playwell.twitter.utils
 		 * @param tweet
 		 * @return
 		 */
-		public static function convertTextByEntities(tweet:Tweet):String
+		public static function convertTextByEntities(status:Status):String
 		{
 
-			var text:String = tweet.text;
-			var entities:Object = tweet.entities;
+			var text:String = status.text;
+			var entities:Object = status.entities;
 
 			if (!entities)
 				return convertText(text);
 
 			var convertItems:Array = [];
 			var i:int;
-			
+
 			if (entities.hasOwnProperty("media"))
 			{
 				var media:Array = entities.media || [];
-				
+
 				for (i = 0; i < media.length; i++)
 				{
 					var med:Object = media[i];
@@ -174,20 +174,20 @@ package jp.playwell.twitter.utils
 		public static function convertToRawStatuses(statuses:Array):Array
 		{
 
-			var rawTweets:Array = [];
+			var rawStatuses:Array = [];
 
 			if (statuses is Array)
 			{
 				var n:int = statuses.length;
-				var rawTweet:Object;
+				var rawStatus:Object;
 
 				for (var i:int = 0; i < n; i++)
 				{
-					rawTweet = Tweet(statuses[i]).toObject();
-					rawTweets.push(rawTweet);
+					rawStatus = Status(statuses[i]).toObject();
+					rawStatuses.push(rawStatus);
 				}
 			}
-			return rawTweets;
+			return rawStatuses;
 
 		}
 
@@ -196,22 +196,22 @@ package jp.playwell.twitter.utils
 		 * @param rawStatuses
 		 * @return
 		 */
-		public static function convertToStatuses(rawTweets:Array):Array
+		public static function convertToStatuses(rawStatuses:Array):Array
 		{
 
-			var tweets:Array = [];
+			var statuses:Array = [];
 
-			if (rawTweets is Array)
+			if (rawStatuses is Array)
 			{
-				var n:int = rawTweets.length;
-				var tweet:Tweet;
+				var n:int = rawStatuses.length;
+				var status:Status;
 
 				for (var i:int = 0; i < n; i++)
 				{
 					try
 					{
-						tweet = parseTweet(rawTweets[i]);
-						tweets.push(tweet);
+						status = parseStatus(rawStatuses[i]);
+						statuses.push(statuses);
 					}
 					catch (e:Error)
 					{
@@ -219,7 +219,7 @@ package jp.playwell.twitter.utils
 					}
 				}
 			}
-			return tweets;
+			return statuses;
 
 		}
 
@@ -308,44 +308,49 @@ package jp.playwell.twitter.utils
 		 * @param obj
 		 * @return
 		 */
-		public static function parseTweet(obj:Object):Tweet
+		public static function parseStatus(obj:Object):Status
 		{
 
 			var id:String = obj.id_str as String;
 
-			var tweet:Tweet;
+			var status:Status;
 
-			if (storedTweets.hasOwnProperty(id))
+			if (storedStatuses.hasOwnProperty(id))
 			{
-				tweet = storedTweets[id];
+				status = storedStatuses[id];
 			}
 			else
 			{
-				tweet = new Tweet;
-				tweet.id = id;
+				status = new Status;
+				status.id = id;
 			}
 
-			tweet.rawObject = obj;
+			var searchFlag:Boolean = obj.hasOwnProperty("from_user");
 
-			if (obj.hasOwnProperty("text"))
+			if (!searchFlag || !status.rawObject)
 			{
-				tweet.text = String(obj.text).replace(/\r\n|[\r\n]/g, "\n");
+				status.rawObject = obj;
+			}
+
+			if (obj.hasOwnProperty("text") && (!searchFlag || status.text == null))
+			{
+				status.text = String(obj.text).replace(/\r\n|[\r\n]/g, "\n");
 			}
 
 			if (obj.hasOwnProperty("created_at"))
 			{
-				tweet.createdDate = DateUtil.parseDateString(obj.created_at);
+				status.createdDate = DateUtil.parseDateString(obj.created_at);
 			}
 
 
 			if (obj.hasOwnProperty("in_reply_to_status_id_str"))
 			{
-				tweet.inReplyToStatusId = obj.in_reply_to_status_id_str;
+				status.inReplyToStatusId = obj.in_reply_to_status_id_str;
 			}
 
 			if (obj.hasOwnProperty("source"))
 			{
-				tweet.source = CoreData.decode(obj.source);
+				status.source = CoreData.decode(obj.source);
 			}
 
 			if (obj.hasOwnProperty("geo") && obj.geo)
@@ -357,13 +362,16 @@ package jp.playwell.twitter.utils
 					if (geo.hasOwnProperty("coordinates") && geo.coordinates is Array)
 					{
 						var coodinates:Array = geo.coordinates as Array;
-						tweet.latLng = new Point(coodinates[0] as Number,
+						status.latLng = new Point(coodinates[0] as Number,
 							coodinates[1] as Number);
 					}
 				}
 			}
 
-			tweet.entities = obj.entities;
+			if (obj.hasOwnProperty("entities"))
+			{
+				status.entities = obj.entities;
+			}
 
 			var key:String;
 
@@ -374,7 +382,7 @@ package jp.playwell.twitter.utils
 			else if (obj.hasOwnProperty("sender")) // messages
 			{
 				key = "sender";
-				tweet.isMessage = true;
+				status.isMessage = true;
 			}
 			else if (obj.hasOwnProperty("from_user")) // search API
 				key = "from_user";
@@ -387,7 +395,7 @@ package jp.playwell.twitter.utils
 				if (key == "from_user")
 				{
 					user = UserUtil.parseUser(obj);
-					user.id = obj.from_user_id;
+					user.id = obj.from_user_id_str;
 					user.screenName = obj.from_user;
 				}
 				else if (obj[key])
@@ -395,12 +403,12 @@ package jp.playwell.twitter.utils
 					user = UserUtil.parseUser(obj[key]);
 				}
 
-				tweet.user = user;
+				status.user = user;
 
 				if (obj.hasOwnProperty("recipient") && obj.recipient)
 				{
 					user = UserUtil.parseUser(obj.recipient);
-					tweet.recipient = user;
+					status.recipient = user;
 				}
 			}
 			else
@@ -411,12 +419,12 @@ package jp.playwell.twitter.utils
 			// if Retweet
 			if (obj.hasOwnProperty("retweeted_status"))
 			{
-				tweet.retweetOf = TweetUtil.parseTweet(obj.retweeted_status);
+				status.retweetOf = StatusUtil.parseStatus(obj.retweeted_status);
 			}
 
-			storedTweets[id] = tweet;
+			storedStatuses[id] = status;
 
-			return tweet;
+			return status;
 
 		}
 
